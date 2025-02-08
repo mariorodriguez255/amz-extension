@@ -1,41 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Amazon Relay Control</title>
-  <style>
-    button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 14px;
-      background-color: #0078D7;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    button:hover {
-      background-color: #005BB5;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMZ-RLY-CNTRL</title>
+    <style>
+        button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 14px;
+            background-color: #0078D7;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #005BB5;
+        }
+    </style>
 </head>
 <body>
-  <h1>Amazon Relay Control</h1>
-  <button id="enable-quickbook">Habilitar Reserva Rápida</button>
-  <button id="disable-quickbook">Deshabilitar Reserva Rápida</button>
-  <script>
-    document.getElementById("enable-quickbook").addEventListener("click", () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "enableQuickBook" });
-      });
-    });
+    <h1>Amazon Relay Control</h1>
+    <button id="enable-quickbook">Habilitar Reserva Rapida</button>
+    <button id="disable-quickbook">Deshabilitar Reserva Rapida</button>
+    <script>
+        document.getElementById("enable-quickbook").addEventListener("click", () => {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                chrome.tabs.sendMessage(tabs[0].id, { action: "enableQuickBook" }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        console.error(chrome.runtime.lastError);
+                    } else {
+                        console.log(response);
+                    }
+                });
+            });
+        });
 
-    document.getElementById("disable-quickbook").addEventListener("click", () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "disableQuickBook" });
-      });
-    });
-  </script>
+        document.getElementById("disable-quickbook").addEventListener("click", () => {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                chrome.tabs.sendMessage(tabs[0].id, { action: "disableQuickBook" }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        console.error(chrome.runtime.lastError);
+                    } else {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

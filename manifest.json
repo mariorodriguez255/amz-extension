@@ -4,28 +4,32 @@
     "description": "Extensión para facilitar la reserva rápida de viajes en Amazon Relay.",
     "version": "1.0",
     "permissions": [
-      "activeTab"
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://relay.amazon.com/*"
     ],
     "background": {
-      "service_worker": "background.js"
+        "service_worker": "background.js"
     },
     "content_scripts": [
-      {
-        "matches": ["https://relay.amazon.com/*"],
-        "js": ["content.js"]
-      }
+        {
+            "matches": ["https://relay.amazon.com/*"],
+            "js": ["content.js"]
+        }
     ],
     "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "images/icon-16.png",
+            "48": "images/icon-48.png",
+            "128": "images/icon-128.png"
+        }
+    },
+    "icons": {
         "16": "images/icon-16.png",
         "48": "images/icon-48.png",
         "128": "images/icon-128.png"
-      }
-    },
-    "icons": {
-      "16": "images/icon-16.png",
-      "48": "images/icon-48.png",
-      "128": "images/icon-128.png"
     }
-  }
+}
