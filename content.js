@@ -1,5 +1,5 @@
 let isAutoBooking = false;
-const sound = new Audio("https://www.soundjay.com/button/beep-07.wav");
+const sound = new Audio(chrome.runtime.getURL("beep-07.wav"));
 
 // Función para resaltar los viajes nuevos y agregar el botón de "Reserva Rápida"
 function highlightNewTrips(tripElements) {
@@ -47,7 +47,7 @@ function highlightNewTrips(tripElements) {
 
 // Función para observar los viajes nuevos
 function observeTrips() {
-    const container = document.querySelector("div[data-test='trip-list-container']");
+    const container = document.querySelector("div[data-test='trip-container'], div.trip-list");
     if (!container) return;
 
     const observer = new MutationObserver((mutations) => {
@@ -72,11 +72,11 @@ observeTrips();
 
 // Escucha los mensajes enviados desde el popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("Mensaje recibido:", request);
     if (request.action === "enableQuickBook") {
         observeTrips();
         sendResponse({ status: "quickbook_enabled" });
     } else if (request.action === "disableQuickBook") {
-        // Aquí puedes agregar lógica para detener la observación si es necesario.
         sendResponse({ status: "quickbook_disabled" });
     }
 });

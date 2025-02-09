@@ -1,36 +1,21 @@
 {
     "manifest_version": 3,
-    "name": "Reserva Rapida Amazon Relay",
-    "description": "Extensión para facilitar la reserva rápida de viajes en Amazon Relay.",
+    "name": "Amazon Relay Autobooker",
     "version": "1.0",
-    "permissions": [
-        "activeTab",
-        "scripting"
-    ],
-    "host_permissions": [
-        "https://relay.amazon.es/*",
-        "https://www.amazon.es/*"
-    ],
+    "description": "Extensión para resaltar y reservar viajes en Amazon Relay.",
+    "permissions": ["activeTab", "scripting"],
+    "host_permissions": ["https://relay.amazon.es/*"],
     "background": {
-        "service_worker": "background.js"
+      "service_worker": "background.js"
     },
     "content_scripts": [
-        {
-            "matches": ["https://relay.amazon.es/*", "https://www.amazon.es/*"],
-            "js": ["content.js"]
-        }
+      {
+        "matches": ["https://relay.amazon.es/*"],
+        "js": ["content.js"]
+      }
     ],
     "action": {
-        "default_popup": "popup.html",
-        "default_icon": {
-            "16": "images/icon-16.png",
-            "48": "images/icon-48.png",
-            "128": "images/icon-128.png"
-        }
-    },
-    "icons": {
-        "16": "images/icon-16.png",
-        "48": "images/icon-48.png",
-        "128": "images/icon-128.png"
+      "default_popup": "popup.html"
     }
-}
+  }
+  
