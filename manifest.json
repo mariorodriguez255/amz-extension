@@ -8,14 +8,15 @@
         "scripting"
     ],
     "host_permissions": [
-        "https://relay.amazon.com/*"
+        "https://relay.amazon.es/*",
+        "https://www.amazon.es/*"
     ],
     "background": {
         "service_worker": "background.js"
     },
     "content_scripts": [
         {
-            "matches": ["https://relay.amazon.com/*"],
+            "matches": ["https://relay.amazon.es/*", "https://www.amazon.es/*"],
             "js": ["content.js"]
         }
     ],
