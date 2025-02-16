@@ -1,4 +1,5 @@
 let isAutoBooking = false;
+let soundEnabled = true; // Opción para activar/desactivar el sonido
 const sound = new Audio(chrome.runtime.getURL("beep-07.wav"));
 
 // Función para resaltar los viajes nuevos y agregar el botón de "Reserva Rápida"
@@ -7,8 +8,10 @@ function highlightNewTrips(tripElements) {
         if (!trip.classList.contains("new-trip")) {
             try {
                 trip.classList.add("new-trip");
-                trip.style.backgroundColor = "#FFD700"; // Color dorado llamativo
-                sound.play().catch((error) => console.error("Error playing sound:", error));
+                trip.style.backgroundColor = "#FFD700";
+                if (soundEnabled) {
+                    sound.play().catch(error => console.error("Error playing sound:", error));
+                }
 
                 // Crear el botón de reserva rápida
                 const quickBookButton = document.createElement("button");
@@ -23,21 +26,21 @@ function highlightNewTrips(tripElements) {
 
                 // Añadir el botón de reserva rápida al viaje
                 quickBookButton.addEventListener("click", () => {
-                    const bookButton = trip.querySelector("button[data-test='book']");
-                    if (bookButton && !isAutoBooking) {
+                    const bookButton = trip.querySelector("button[data-test='book-trip']");
+                    if (bookButton &&!isAutoBooking) {
                         isAutoBooking = true;
-                        bookButton.click(); // Simula el clic en el botón de "Reservar"
+                        bookButton.click();
                         alert("¡Viaje reservado con éxito!");
                         setTimeout(() => {
                             isAutoBooking = false;
-                        }, 2000); // Evitar múltiples reservas rápidas en poco tiempo
+                        }, 2000);
                     } else {
                         console.error("Error: Book button not found or auto booking in progress.");
                     }
                 });
 
                 // Añadir el botón de reserva rápida a la UI del viaje
-                trip.appendChild(quickBookButton);
+                trip.querySelector("div[data-test='trip-card-details']").appendChild(quickBookButton);
             } catch (error) {
                 console.error("Error al resaltar el viaje o agregar el botón de reserva rápida:", error);
             }
@@ -47,24 +50,27 @@ function highlightNewTrips(tripElements) {
 
 // Función para observar los viajes nuevos
 function observeTrips() {
-    const container = document.querySelector("div[data-test='trip-container'], div.trip-list");
-    if (!container) return;
+    const container = document.querySelector("div[data-test='trip-container']");
+    if (!container) {
+        console.warn("Trip container not found. Retrying in 2 seconds...");
+        setTimeout(observeTrips, 2000);
+        return;
+    }
 
-    const observer = new MutationObserver((mutations) => {
-        requestAnimationFrame(() => {
-            mutations.forEach((mutation) => {
-                const newTrips = Array.from(mutation.addedNodes).filter(
-                    (node) => node.nodeType === 1 && node.matches("div[data-test='trip']")
-                );
-
-                if (newTrips.length > 0) {
-                    highlightNewTrips(newTrips);
-                }
-            });
+    // Observar solo los cambios en los elementos de la lista de viajes
+    const listItems = container.querySelectorAll("div[data-test^='trip-card']");
+    if (listItems.length > 0) {
+        const observer = new MutationObserver((mutations) => {
+            highlightNewTrips(Array.from(listItems)); // Resaltar los nuevos viajes en la lista
         });
-    });
 
-    observer.observe(container, { childList: true, subtree: true });
+        listItems.forEach(listItem => {
+            observer.observe(listItem, { childList: true, subtree: false });
+        });
+    } else {
+        console.warn("Trip list items not found. Retrying in 2 seconds...");
+        setTimeout(observeTrips, 2000);
+    }
 }
 
 // Iniciar la observación de los viajes
@@ -78,5 +84,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ status: "quickbook_enabled" });
     } else if (request.action === "disableQuickBook") {
         sendResponse({ status: "quickbook_disabled" });
+    } else if (request.action === "toggleSound") {
+        soundEnabled =!soundEnabled; // Cambiar el estado del sonido
+        sendResponse({ soundEnabled: soundEnabled });
     }
 });

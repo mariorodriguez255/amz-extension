@@ -3,7 +3,7 @@
     "name": "Amazon Relay Autobooker",
     "version": "1.0",
     "description": "Extensión para resaltar y reservar viajes en Amazon Relay.",
-    "permissions": ["activeTab", "scripting", "storage"],
+    "permissions": ["activeTab", "scripting", "storage", "tabs"],
     "host_permissions": ["https://relay.amazon.es/*"],
     "background": {
       "service_worker": "background.js"
@@ -21,4 +21,3 @@
       "extension_pages": "script-src 'self'; object-src 'self'"
     }
   }
-  
