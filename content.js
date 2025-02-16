@@ -1,6 +1,6 @@
 let isAutoBooking = false;
 let soundEnabled = true; // Opción para activar/desactivar el sonido
-const sound = new Audio(chrome.runtime.getURL("beep-07.wav"));
+const sound = new Audio(chrome.runtime.getURL("sound.mp3"));
 
 // Función para resaltar los viajes nuevos y agregar el botón de "Reserva Rápida"
 function highlightNewTrips(tripElements) {
