@@ -1,23 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Amazon Relay Autobooker",
-  "version": "1.1",
-  "description": "Extensión para resaltar y reservar viajes en Amazon Relay.",
-  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "name": "Relay Auto Booker",
+  "version": "1.0",
+  "description": "Extension para automatizar reservas en Amazon Relay.",
+  "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": ["https://relay.amazon.es/*"],
   "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
   },
   "content_scripts": [
     {
       "matches": ["https://relay.amazon.es/*"],
       "js": ["content.js"]
     }
-  ],
-  "action": {
-    "default_popup": "popup.html"
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
-  }
+  ]
 }
