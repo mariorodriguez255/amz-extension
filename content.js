@@ -4,18 +4,36 @@ if (document.readyState === "complete") {
 }
 
 function detectLoads() {
-  setInterval(() => {
-    const loads = document.querySelectorAll(".load-card");
-    if (loads.length > 0) {
-      console.log(`Encontradas ${loads.length} cargas disponibles.`);
-      loads.forEach((load) => {
-        console.log(load.innerText);
-        addQuickBookButton(load);
-      });
-    } else {
-      console.log("No se encontraron cargas disponibles.");
-    }
-  }, 3000); // Escanea cada 3 segundos
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes.length) {
+        mutation.addedNodes.forEach((node) => {
+          if (node.classList && node.classList.contains("load-card")) {
+            console.log(`Encontrada nueva carga disponible.`);
+            console.log(node.innerText);
+            addQuickBookButton(node);
+          }
+        });
+      }
+    });
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+  // Verificar si ya existen elementos .load-card al cargar la página
+  const initialLoads = document.querySelectorAll(".load-card");
+  if (initialLoads.length > 0) {
+    console.log(`Encontradas ${initialLoads.length} cargas disponibles.`);
+    initialLoads.forEach((load) => {
+      console.log(load.innerText);
+      addQuickBookButton(load);
+    });
+  } else {
+    console.log("No se encontraron cargas disponibles.");
+  }
 }
 
 function addQuickBookButton(load) {
@@ -23,16 +41,6 @@ function addQuickBookButton(load) {
     const quickBookBtn = document.createElement("button");
     quickBookBtn.innerText = "Reserva Rápida";
     quickBookBtn.className = "quick-book-btn";
-    quickBookBtn.style.marginLeft = "10px";
-    quickBookBtn.style.padding = "5px";
-    quickBookBtn.style.backgroundColor = "#ff9800";
-    quickBookBtn.style.color = "white";
-    quickBookBtn.style.border = "none";
-    quickBookBtn.style.cursor = "pointer";
-    quickBookBtn.style.position = "absolute";
-    quickBookBtn.style.right = "10px";
-    quickBookBtn.style.top = "10px";
-    quickBookBtn.style.zIndex = "1000";
 
     quickBookBtn.addEventListener("click", () => {
       attemptBooking(load);
@@ -54,10 +62,10 @@ function attemptBooking(load) {
         confirmButton.click();
         console.log("Reserva confirmada");
       } else {
-        console.log("No se encontró el boton de confirmacion");
+        console.error("No se encontró el botón de confirmación");
       }
     }, 1000);
   } else {
-    console.log("No se encontro el boton de reserva en esta carga.");
+    console.error("No se encontró el botón de reserva en esta carga.");
   }
 }
